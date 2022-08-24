@@ -6,14 +6,14 @@ import time
 
 # 실제 핀 정의
 #PWM PIN
-PWMA = 26  #37 pin
-PWMB = 0   #27 pin
+PWMA = 13  #37 pin
+PWMB = 12   #27 pin
 
 #GPIO PIN
-AIN1 = 19  #37 pin
-AIN2 = 13  #35 pin
+AIN1 = 26  #37 pin
+AIN2 = 5  #35 pin
 BIN1 = 6   #31 pin
-BIN2 = 5   #29 pin
+BIN2 = 25   #29 pin
 
 # Servo PIN
 servo_pin = 14 # 8 PIN
