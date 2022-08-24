@@ -6,17 +6,17 @@ import time
 
 # 실제 핀 정의
 #PWM PIN
-PWMA = 13  #37 pin
-PWMB = 12   #27 pin
+PWMA = 32
+PWMB = 33
 
 #GPIO PIN
-AIN1 = 26  #37 pin
-AIN2 = 5  #35 pin
-BIN1 = 6   #31 pin
-BIN2 = 25   #29 pin
+AIN1 = 37
+AIN2 = 31
+BIN1 = 29
+BIN2 = 22
 
 # Servo PIN
-servo_pin = 14 # 8 PIN
+servo_pin = 8
 
 def motor_back(speed):
     L_Motor.ChangeDutyCycle(speed)
@@ -67,14 +67,15 @@ def motor_right(speed):
     GPIO.output(BIN1,True)
 
 GPIO.setwarnings(False)
-GPIO.setmode(GPIO.BCM)
+#  GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BOARD)
 
 # Servo motor
 GPIO.setup(servo_pin, GPIO.OUT)
 s_pwm = GPIO.PWM(servo_pin, 50)
-s_pwm.start(7.5)
-time.sleep(0.2)
-s_pwm.stop()
+
+s_pwm.start(7.5) # 정면
+time.sleep(0.5)
 
 # DC motor
 GPIO.setup(AIN2,GPIO.OUT)
@@ -97,7 +98,7 @@ def main():
     camera = cv2.VideoCapture(-1)
     camera.set(3, 640)
     camera.set(4, 480)
-    filepath = '/home/pi/AI_CAR/video/train'
+    filepath = '/home/pi/smart-car/video/train'
     i = 0
     carState = 'stop'
 
@@ -109,6 +110,8 @@ def main():
             break
         elif keyValue == 82:
             print('go')
+            s_pwm.ChangeDutyCycle(7.5)
+            time.sleep(0.5)
             carState = 'go'
             motor_go(speedSet)
         elif keyValue == 84 and carState == 'stop':
@@ -122,19 +125,13 @@ def main():
         elif keyValue == 81:
             print('left')
             carState = 'left'
-            s_pwm.start(7.5)
-            time.sleep(0.2)
-            s_pwm.ChangeDutyCycle(6.0)
-            time.sleep(0.2)
-            s_pwm.stop()
+            s_pwm.ChangeDutyCycle(9)
+            time.sleep(0.5)
         elif keyValue == 83:
             print('right')
             carState = 'right'
-            s_pwm.start(7.5)
-            time.sleep(0.2)
-            s_pwm.ChangeDutyCycle(9.0)
-            time.sleep(0.2)
-            s_pwm.stop()
+            s_pwm.ChangeDutyCycle(6)
+            time.sleep(0.5)
 
         _, image = camera.read()
         image = cv2.flip(image, -1)
