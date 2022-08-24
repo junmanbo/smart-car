@@ -1,0 +1,4 @@
+tensorflow
+numpy
+h5py
+opencv-python
