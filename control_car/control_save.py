@@ -86,19 +86,19 @@ GPIO.setup(BIN1,GPIO.OUT)
 GPIO.setup(BIN2,GPIO.OUT)
 GPIO.setup(PWMB,GPIO.OUT)
 
-L_Motor = GPIO.PWM(PWMA,100)
+L_Motor = GPIO.PWM(PWMA,50)
 L_Motor.start(0)
 
-R_Motor = GPIO.PWM(PWMB,100)
+R_Motor = GPIO.PWM(PWMB,50)
 R_Motor.start(0)
 
-speedSet = 50
+speedSet = 80
 
 def main():
     camera = cv2.VideoCapture(-1)
     camera.set(3, 640)
     camera.set(4, 480)
-    filepath = '/home/pi/smart-car/video/train'
+    filepath = '/home/pi/Documents/smart-car/video/train'
     i = 0
     carState = 'stop'
 
@@ -110,8 +110,8 @@ def main():
             break
         elif keyValue == 82:
             print('go')
-            s_pwm.ChangeDutyCycle(7.5)
-            time.sleep(0.5)
+            #  s_pwm.ChangeDutyCycle(7.5)
+            #  time.sleep(0.5)
             carState = 'go'
             motor_go(speedSet)
         elif keyValue == 84 and carState == 'stop':
@@ -125,7 +125,7 @@ def main():
         elif keyValue == 81:
             print('left')
             carState = 'left'
-            s_pwm.ChangeDutyCycle(9)
+            s_pwm.ChangeDutyCycle(9.5)
             time.sleep(0.5)
         elif keyValue == 83:
             print('right')
