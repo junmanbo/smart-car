@@ -18,14 +18,6 @@ BIN2 = 22
 # Servo PIN
 servo_pin = 8
 
-def motor_back(speed):
-    L_Motor.ChangeDutyCycle(speed)
-    GPIO.output(AIN2,False)
-    GPIO.output(AIN1,True)
-    R_Motor.ChangeDutyCycle(speed)
-    GPIO.output(BIN2,False)
-    GPIO.output(BIN1,True)
-
 def motor_go(speed):
     L_Motor.ChangeDutyCycle(speed)
     GPIO.output(AIN2,False)
@@ -50,21 +42,17 @@ def motor_stop():
     GPIO.output(BIN2,False)
     GPIO.output(BIN1,False)
 
-def motor_left(speed):
-    L_Motor.ChangeDutyCycle(speed)
-    GPIO.output(AIN2,False)
-    GPIO.output(AIN1,True)
-    R_Motor.ChangeDutyCycle(0)
-    GPIO.output(BIN2,True)
-    GPIO.output(BIN1,False)
+def servo_forward():
+    s_pwm.ChangeDutyCycle(7.5)
+    time.sleep(0.5)
 
-def motor_right(speed):
-    L_Motor.ChangeDutyCycle(0)
-    GPIO.output(AIN2,True)
-    GPIO.output(AIN1,False)
-    R_Motor.ChangeDutyCycle(speed)
-    GPIO.output(BIN2,False)
-    GPIO.output(BIN1,True)
+def servo_left():
+    s_pwm.ChangeDutyCycle(9)
+    time.sleep(0.5)
+
+def servo_right():
+    s_pwm.ChangeDutyCycle(6)
+    time.sleep(0.5)
 
 GPIO.setwarnings(False)
 #  GPIO.setmode(GPIO.BCM)
@@ -92,7 +80,7 @@ L_Motor.start(0)
 R_Motor = GPIO.PWM(PWMB,50)
 R_Motor.start(0)
 
-speedSet = 80
+speedSet = 50
 
 def main():
     camera = cv2.VideoCapture(-1)
@@ -108,30 +96,27 @@ def main():
 
         if keyValue == ord('q'):
             break
-        elif keyValue == 82:
+        elif keyValue == 82 and carState == 'stop':
             print('go')
-            #  s_pwm.ChangeDutyCycle(7.5)
-            #  time.sleep(0.5)
             carState = 'go'
             motor_go(speedSet)
         elif keyValue == 84 and carState == 'stop':
             print('back')
             carState = 'back'
             motor_back(speedSet)
-        elif keyValue == 84:
+        elif keyValue == 84 and (carState == 'go' or carState == 'back'):
             print('stop')
             carState = 'stop'
             motor_stop()
-        elif keyValue == 81:
+        elif keyValue == 82 and carState == 'go': # forward arrow key
+            print('forward direction')
+            servo_forward()
+        elif keyValue == 81 and carState == 'go': # left arrow key
             print('left')
-            carState = 'left'
-            s_pwm.ChangeDutyCycle(9.5)
-            time.sleep(0.5)
-        elif keyValue == 83:
+            servo_left()
+        elif keyValue == 83 and carState == 'go': # right arrow key
             print('right')
-            carState = 'right'
-            s_pwm.ChangeDutyCycle(6)
-            time.sleep(0.5)
+            servo_right()
 
         _, image = camera.read()
         image = cv2.flip(image, -1)
@@ -144,15 +129,8 @@ def main():
         save_image = cv2.resize(save_image, (200,66))
         cv2.imshow('Save', save_image)
 
-        if carState == 'left':
-            cv2.imwrite(f'{filepath}/L_{i:05d}.png', save_image)
-            i += 1
-        elif carState == 'right':
-            cv2.imwrite(f'{filepath}/R_{i:05d}.png', save_image)
-            i += 1
-        elif carState == 'go':
-            cv2.imwrite(f'{filepath}/S_{i:05d}.png', save_image)
-            i += 1
+        cv2.imwrite(f'{filepath}/{i:05d}.png', save_image)
+        i += 1
 
     cv2.destroyAllWindows()
 
