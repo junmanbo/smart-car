@@ -15,7 +15,10 @@ AIN2 = 31
 BIN1 = 29
 BIN2 = 22
 
-relay_pin = 8
+relay_pin1 = 11
+relay_pin2 = 12
+relay_pin3 = 13
+relay_pin4 = 15
 
 def motor_go(speed):
     L_Motor.ChangeDutyCycle(speed)
@@ -38,7 +41,10 @@ GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
 
 # Relay Switch
-GPIO.setup(relay_pin, GPIO.OUT)
+GPIO.setup(relay_pin1, GPIO.OUT)
+GPIO.setup(relay_pin2, GPIO.OUT)
+GPIO.setup(relay_pin3, GPIO.OUT)
+GPIO.setup(relay_pin4, GPIO.OUT)
 
 # DC motor
 GPIO.setup(AIN2,GPIO.OUT)
@@ -55,7 +61,7 @@ L_Motor.start(0)
 R_Motor = GPIO.PWM(PWMB,50)
 R_Motor.start(0)
 
-speedSet = 50
+speedSet = 100
 
 def main():
     carState = 'stop'
@@ -68,13 +74,19 @@ def main():
         elif command == 1:
             print('go')
             carState = 'go'
-            GPIO.output(relay_pin, 1)
+            GPIO.output(relay_pin1, 1)
+            GPIO.output(relay_pin2, 1)
+            GPIO.output(relay_pin3, 1)
+            GPIO.output(relay_pin4, 1)
             motor_go(speedSet)
 
         elif command == 2:
             print('stop')
             carState = 'stop'
-            GPIO.output(relay_pin, 0)
+            GPIO.output(relay_pin1, 0)
+            GPIO.output(relay_pin2, 0)
+            GPIO.output(relay_pin3, 0)
+            GPIO.output(relay_pin4, 0)
             motor_stop()
 
 if __name__ == '__main__':
