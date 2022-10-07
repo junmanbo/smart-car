@@ -10,13 +10,13 @@ p.start(7.5) # Initialization
 try:
   while True:
     p.ChangeDutyCycle(6)
-    time.sleep(0.5)
+    time.sleep(1)
     p.ChangeDutyCycle(7.5)
-    time.sleep(0.5)
+    time.sleep(1)
     p.ChangeDutyCycle(9)
-    time.sleep(0.5)
+    time.sleep(1)
     p.ChangeDutyCycle(7.5)
-    time.sleep(0.5)
+    time.sleep(1)
 except KeyboardInterrupt:
   p.stop()
   GPIO.cleanup()
