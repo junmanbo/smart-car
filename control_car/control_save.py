@@ -10,18 +10,18 @@ PWMA = 32
 PWMB = 33
 
 #GPIO PIN
-AIN1 = 37
+#  AIN1 = 37
 AIN2 = 31
-BIN1 = 29
-BIN2 = 22
+#  BIN1 = 29
+#  BIN2 = 22
 
 # Servo PIN
-servo_pin = 8
+servo_pin = 7
 
 def motor_go(speed):
     L_Motor.ChangeDutyCycle(speed)
-    GPIO.output(AIN2,False)
-    GPIO.output(AIN1,True)
+    GPIO.output(AIN1,False)
+    GPIO.output(AIN2,True)
     R_Motor.ChangeDutyCycle(speed)
     GPIO.output(BIN2,False)
     GPIO.output(BIN1,True)
@@ -37,10 +37,10 @@ def motor_back(speed):
 def motor_stop():
     L_Motor.ChangeDutyCycle(0)
     GPIO.output(AIN2,False)
-    GPIO.output(AIN1,False)
-    R_Motor.ChangeDutyCycle(0)
-    GPIO.output(BIN2,False)
-    GPIO.output(BIN1,False)
+    #  GPIO.output(AIN1,False)
+    #  R_Motor.ChangeDutyCycle(0)
+    #  GPIO.output(BIN2,False)
+    #  GPIO.output(BIN1,False)
 
 def servo_forward():
     s_pwm.ChangeDutyCycle(7.5)
@@ -67,18 +67,18 @@ time.sleep(0.5)
 
 # DC motor
 GPIO.setup(AIN2,GPIO.OUT)
-GPIO.setup(AIN1,GPIO.OUT)
+#  GPIO.setup(AIN1,GPIO.OUT)
 GPIO.setup(PWMA,GPIO.OUT)
 
-GPIO.setup(BIN1,GPIO.OUT)
-GPIO.setup(BIN2,GPIO.OUT)
-GPIO.setup(PWMB,GPIO.OUT)
+#  GPIO.setup(BIN1,GPIO.OUT)
+#  GPIO.setup(BIN2,GPIO.OUT)
+#  GPIO.setup(PWMB,GPIO.OUT)
 
 L_Motor = GPIO.PWM(PWMA,50)
 L_Motor.start(0)
 
-R_Motor = GPIO.PWM(PWMB,50)
-R_Motor.start(0)
+#  R_Motor = GPIO.PWM(PWMB,50)
+#  R_Motor.start(0)
 
 speedSet = 50
 

@@ -16,12 +16,12 @@ AIN2 = 31
 
 def motor_go(speed):
     Motor.ChangeDutyCycle(speed)
-    GPIO.output(AIN1,False)
+    #  GPIO.output(AIN1,False)
     GPIO.output(AIN2,True)
 
 def motor_stop():
     Motor.ChangeDutyCycle(0)
-    GPIO.output(AIN1,False)
+    #  GPIO.output(AIN1,False)
     GPIO.output(AIN2,False)
 
 GPIO.setwarnings(False)
@@ -30,7 +30,7 @@ GPIO.setmode(GPIO.BOARD)
 
 # DC motor
 GPIO.setup(AIN2,GPIO.OUT)
-GPIO.setup(AIN1,GPIO.OUT)
+#  GPIO.setup(AIN1,GPIO.OUT)
 GPIO.setup(PWMA,GPIO.OUT)
 
 #  GPIO.setup(BIN1,GPIO.OUT)
@@ -43,7 +43,7 @@ Motor.start(0)
 #  R_Motor = GPIO.PWM(PWMB,50)
 #  R_Motor.start(0)
 
-speedSet = 90
+speedSet = 40
 
 def main():
     try:
