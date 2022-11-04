@@ -6,6 +6,8 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 import time
+from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input, decode_predictions
+from tensorflow.keras.preprocessing import image
 
 # 실제 핀 정의
 #PWM PIN
@@ -56,9 +58,9 @@ speedSet = 23
 def img_preprocess(image):
     height, _, _ = image.shape
     image = image[int(height/2):,:,:]
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
-    image = cv2.GaussianBlur(image, (3,3), 0)
-    image = cv2.resize(image, (200, 66))
+    #  image = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
+    #  image = cv2.GaussianBlur(image, (3,3), 0)
+    image = cv2.resize(image, (224, 224))
     image = image / 255
     return image
 
@@ -66,10 +68,7 @@ def main():
     camera = cv2.VideoCapture(-1)
     camera.set(3, 640)
     camera.set(4, 480)
-    model_path = '/home/pi/Documents/smart-car/autonomous/lane_navigation_final.h5'
-    model = load_model(model_path)
 
-    i = 0
     carState = 'stop'
 
     while ( camera.isOpened() ):
@@ -86,35 +85,8 @@ def main():
         preprocessed = img_preprocess(image)
         cv2.imshow('pre', preprocessed)
 
-        X = np.asarray([preprocessed])
-        steering_angle = int(model.predict(X)[0])
-        print("predict angle: ", steering_angle)
-
-
-        default_angle = 90
-        diff_angle = default_angle - steering_angle
 
         motor_go(speedSet)
-
-        # 직진
-        if 87 <= steering_angle <= 93:
-            servo_control(6)
-        # 좌회전
-        elif 80 <= steering_angle < 87:
-            diff_angle = default_angle - 80
-        elif 50 <= steering_angle < 80:
-            diff_angle = default_angle - 75
-        elif 30 <= steering_angle < 50:
-            diff_angle = default_angle - 70
-        # 우회전
-        elif 93 <= steering_angle < 100:
-            diff_angle = default_angle - 100
-        elif 100 <= steering_angle < 130:
-            diff_angle = default_angle - 105
-        elif 130 <= steering_angle < 150:
-            diff_angle = default_angle - 110
-
-        servo_control(6 + (0.067 * diff_angle))
 
     cv2.destroyAllWindows()
 

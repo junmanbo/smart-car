@@ -67,7 +67,7 @@ def main():
     carState = 'stop'
 
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter(filepath+'test.avi',fourcc, 20.0, (640,480))
+    out = cv2.VideoWriter(filepath+'test3.avi',fourcc, 20.0, (640,480))
 
     while ( camera.isOpened() ):
 

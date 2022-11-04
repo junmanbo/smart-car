@@ -345,7 +345,7 @@ if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
 
     #  test_video('/home/pi/Documents/smart-car/data_acquisition/tmp/video/test')
-    test_video('/home/pi/Documents/smart-car/data_acquisition/tmp/video/test2')
+    test_video('/home/pi/Documents/smart-car/data_acquisition/tmp/test3')
     #  test_photo('/home/pi/Documents/smart-car/data_acquisition/tmp/photo')
     #  test_photo(sys.argv[1])
     #  test_video(sys.argv[1])
