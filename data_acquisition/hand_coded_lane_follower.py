@@ -69,8 +69,8 @@ def detect_edges(frame):
     show_image("hsv", hsv)
     #  lower_blue = np.array([30, 40, 0])
     #  upper_blue = np.array([150, 255, 255])
-    lower_blue = np.array([20, 30, 150])
-    upper_blue = np.array([150, 150, 150])
+    lower_blue = np.array([50, 40, 30])
+    upper_blue = np.array([90, 255, 255])
     mask = cv2.inRange(hsv, lower_blue, upper_blue)
     show_image("blue mask", mask)
 
@@ -79,27 +79,27 @@ def detect_edges(frame):
 
     return edges
 
-def detect_edges_old(frame):
-    # filter for blue lane lines
-    hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
-    show_image("hsv", hsv)
-    for i in range(16):
-        lower_blue = np.array([30, 16 * i, 0])
-        upper_blue = np.array([150, 255, 255])
-        mask = cv2.inRange(hsv, lower_blue, upper_blue)
-        show_image("blue mask Sat=%s" % (16* i), mask)
-
-
-    #for i in range(16):
-        #lower_blue = np.array([16 * i, 40, 50])
-        #upper_blue = np.array([150, 255, 255])
-        #mask = cv2.inRange(hsv, lower_blue, upper_blue)
-       # show_image("blue mask hue=%s" % (16* i), mask)
-
-        # detect edges
-    edges = cv2.Canny(mask, 200, 400)
-
-    return edges
+#  def detect_edges_old(frame):
+#      # filter for blue lane lines
+#      hsv = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)
+#      show_image("hsv", hsv)
+#      for i in range(16):
+#          lower_blue = np.array([30, 16 * i, 0])
+#          upper_blue = np.array([150, 255, 255])
+#          mask = cv2.inRange(hsv, lower_blue, upper_blue)
+#          show_image("blue mask Sat=%s" % (16* i), mask)
+#
+#
+#      #for i in range(16):
+#          #lower_blue = np.array([16 * i, 40, 50])
+#          #upper_blue = np.array([150, 255, 255])
+#          #mask = cv2.inRange(hsv, lower_blue, upper_blue)
+#         # show_image("blue mask hue=%s" % (16* i), mask)
+#
+#          # detect edges
+#      edges = cv2.Canny(mask, 200, 400)
+#
+#      return edges
 
 
 def region_of_interest(canny):
@@ -109,8 +109,8 @@ def region_of_interest(canny):
     # only focus bottom half of the screen
 
     polygon = np.array([[
-        (0, height * 1 / 2),
-        (width, height * 1 / 2),
+        (0, height * 1 / 3),
+        (width, height * 1 / 3),
         (width, height),
         (0, height),
     ]], np.int32)
@@ -344,7 +344,8 @@ def test_video(video_file):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
 
-    test_video('/home/pi/Documents/smart-car/data_acquisition/tmp/video/test')
+    #  test_video('/home/pi/Documents/smart-car/data_acquisition/tmp/video/test')
+    test_video('/home/pi/Documents/smart-car/data_acquisition/tmp/video/test2')
     #  test_photo('/home/pi/Documents/smart-car/data_acquisition/tmp/photo')
     #  test_photo(sys.argv[1])
     #  test_video(sys.argv[1])

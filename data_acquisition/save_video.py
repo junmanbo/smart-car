@@ -31,11 +31,11 @@ def servo_forward():
     time.sleep(0.5)
 
 def servo_left():
-    s_motor.ChangeDutyCycle(7.5)
+    s_motor.ChangeDutyCycle(7.3)
     time.sleep(0.5)
 
 def servo_right():
-    s_motor.ChangeDutyCycle(4.5)
+    s_motor.ChangeDutyCycle(4.7)
     time.sleep(0.5)
 
 GPIO.setwarnings(False)
@@ -56,7 +56,7 @@ time.sleep(0.5)
 dc_motor = GPIO.PWM(PWM_pin,50)
 dc_motor.start(0)
 
-speedSet = 50
+speedSet = 23
 
 def main():
     camera = cv2.VideoCapture(-1)
