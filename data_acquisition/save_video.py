@@ -1,6 +1,6 @@
 # 차를 조종하고 사진 저장하기
 
-import cv2
+import cv2 
 import RPi.GPIO as GPIO
 import time
 
@@ -27,15 +27,15 @@ def motor_stop():
     GPIO.output(DIR,False)
 
 def servo_forward():
-    s_motor.ChangeDutyCycle(6)
+    s_motor.ChangeDutyCycle(5.6)
     time.sleep(0.5)
 
 def servo_left():
-    s_motor.ChangeDutyCycle(7.3)
+    s_motor.ChangeDutyCycle(8.5)
     time.sleep(0.5)
 
 def servo_right():
-    s_motor.ChangeDutyCycle(4.7)
+    s_motor.ChangeDutyCycle(4.3)
     time.sleep(0.5)
 
 GPIO.setwarnings(False)
@@ -50,20 +50,20 @@ GPIO.setup(servo_pin, GPIO.OUT)
 s_motor = GPIO.PWM(servo_pin, 50)
 
 # dc_motor 초기화
-s_motor.start(6) # 정면
+s_motor.start(5.6) # 정면
 time.sleep(0.5)
 
 dc_motor = GPIO.PWM(PWM_pin,50)
 dc_motor.start(0)
 
-speedSet = 23
+speedSet = 25
 
 def main():
     camera = cv2.VideoCapture(-1)
     camera.set(3, 640)
     camera.set(4, 480)
 
-    filepath = '/home/pi/Documents/smart-car/data_acquisition/tmp/video/'
+    filepath = '/home/pi/Documents/smart-car/data_acquisition/tmp/'
     carState = 'stop'
 
     fourcc = cv2.VideoWriter_fourcc(*'XVID')

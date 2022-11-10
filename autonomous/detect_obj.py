@@ -8,6 +8,7 @@ from tensorflow.keras.models import load_model
 import time
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input, decode_predictions
 from tensorflow.keras.preprocessing import image
+from tensorflow import keras
 
 # 실제 핀 정의
 #PWM PIN
@@ -53,43 +54,50 @@ time.sleep(0.5)
 dc_motor = GPIO.PWM(PWM_pin,50)
 dc_motor.start(0)
 
-speedSet = 23
+speedSet = 25
 
-def img_preprocess(image):
-    height, _, _ = image.shape
-    image = image[int(height/2):,:,:]
-    #  image = cv2.cvtColor(image, cv2.COLOR_BGR2YUV)
-    #  image = cv2.GaussianBlur(image, (3,3), 0)
-    image = cv2.resize(image, (224, 224))
-    image = image / 255
-    return image
+def img_preprocess(img):
+    height, _, _ = img.shape
+    img = img[int(height/2):,:,:]
+    img = cv2.resize(img, (200, 66))
+    img = img / 255
+    return img
 
-def main():
+def main(model):
     camera = cv2.VideoCapture(-1)
     camera.set(3, 640)
     camera.set(4, 480)
 
-    carState = 'stop'
-
     while ( camera.isOpened() ):
 
-        keyValue = cv2.waitKey(10)
+        keyValue = cv2.waitKey(5)
 
         if keyValue == ord('q'):
             break
 
-        _, image = camera.read()
-        image = cv2.flip(image, -1)
-        cv2.imshow('Original', image)
+        _, img = camera.read()
+        img = cv2.flip(img, -1)
+        cv2.imshow('Original', img)
 
-        preprocessed = img_preprocess(image)
-        cv2.imshow('pre', preprocessed)
+        img_array = keras.preprocessing.image.img_to_array(img)
+        img_array = tf.expand_dims(img_array, 0)
 
+        predictions = model.predict(img_array)
+        score = tf.nn.softmax(predictions[0])
+        probability = np.max(score)*100
+        print(probability)
 
-        motor_go(speedSet)
+        # 0: human 1: stop_sign
+        if probability >= 70:
+            motor_stop()
+            time.sleep(1)
+        else:
+            motor_go(speedSet)
 
     cv2.destroyAllWindows()
 
 if __name__ == '__main__':
-    main()
+    model_path = '/home/pi/Documents/smart-car/autonomous/object_detection_model.h5'
+    model = load_model(model_path)
+    main(model)
     GPIO.cleanup()

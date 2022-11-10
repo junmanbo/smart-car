@@ -6,6 +6,7 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 import time
+#  from tflite_runtime.interpreter import Interpreter
 
 # 실제 핀 정의
 #PWM PIN
@@ -45,13 +46,13 @@ GPIO.setup(servo_pin, GPIO.OUT)
 s_motor = GPIO.PWM(servo_pin, 50)
 
 # dc_motor 초기화
-s_motor.start(6) # 정면
+s_motor.start(5.6) # 정면
 time.sleep(0.5)
 
 dc_motor = GPIO.PWM(PWM_pin,50)
 dc_motor.start(0)
 
-speedSet = 23
+speedSet = 25
 
 def img_preprocess(image):
     height, _, _ = image.shape
@@ -66,7 +67,7 @@ def main():
     camera = cv2.VideoCapture(-1)
     camera.set(3, 640)
     camera.set(4, 480)
-    model_path = '/home/pi/Documents/smart-car/autonomous/lane_navigation_final.h5'
+    model_path = '/home/pi/Documents/smart-car/autonomous/lane_navigation_check2.h5'
     model = load_model(model_path)
 
     i = 0
@@ -74,7 +75,7 @@ def main():
 
     while ( camera.isOpened() ):
 
-        keyValue = cv2.waitKey(10)
+        keyValue = cv2.waitKey(3)
 
         if keyValue == ord('q'):
             break
@@ -97,24 +98,24 @@ def main():
         motor_go(speedSet)
 
         # 직진
-        if 87 <= steering_angle <= 93:
-            servo_control(6)
+        if 85 <= steering_angle < 95:
+            servo_control(5.6)
         # 좌회전
-        elif 80 <= steering_angle < 87:
+        elif 60 <= steering_angle < 85:
             diff_angle = default_angle - 80
-        elif 50 <= steering_angle < 80:
-            diff_angle = default_angle - 75
-        elif 30 <= steering_angle < 50:
+        elif 30 <= steering_angle < 60:
             diff_angle = default_angle - 70
+        elif steering_angle < 30:
+            diff_angle = default_angle - 60
         # 우회전
-        elif 93 <= steering_angle < 100:
+        elif 95 <= steering_angle < 120:
             diff_angle = default_angle - 100
-        elif 100 <= steering_angle < 130:
-            diff_angle = default_angle - 105
-        elif 130 <= steering_angle < 150:
+        elif 120 <= steering_angle < 150:
             diff_angle = default_angle - 110
+        elif 150 <= steering_angle:
+            diff_angle = default_angle - 120
 
-        servo_control(6 + (0.067 * diff_angle))
+        servo_control(5.6 + (0.067 * diff_angle))
 
     cv2.destroyAllWindows()
 
