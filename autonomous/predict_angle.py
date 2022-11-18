@@ -18,6 +18,10 @@ DIR = 31
 # Servo PIN
 servo_pin = 7
 
+# Relay PIN
+relay_pin1 = 11
+relay_pin2 = 13
+
 def motor_go(speed):
     dc_motor.ChangeDutyCycle(speed)
     GPIO.output(DIR,True)
@@ -32,10 +36,14 @@ def motor_stop():
 
 def servo_control(degree):
     s_motor.ChangeDutyCycle(degree)
-    time.sleep(0.5)
+    time.sleep(0.1)
 
 GPIO.setwarnings(False)
 GPIO.setmode(GPIO.BOARD)
+
+# Relay init
+GPIO.setup(relay_pin1, GPIO.OUT)
+GPIO.setup(relay_pin2, GPIO.OUT)
 
 # DC motor
 GPIO.setup(DIR,GPIO.OUT)
@@ -52,7 +60,6 @@ time.sleep(0.5)
 dc_motor = GPIO.PWM(PWM_pin,50)
 dc_motor.start(0)
 
-speedSet = 25
 
 def img_preprocess(image):
     height, _, _ = image.shape
@@ -65,13 +72,15 @@ def img_preprocess(image):
 
 def main():
     camera = cv2.VideoCapture(-1)
-    camera.set(3, 640)
-    camera.set(4, 480)
-    model_path = '/home/pi/Documents/smart-car/autonomous/lane_navigation_check2.h5'
+    camera.set(3, 320)
+    camera.set(4, 240)
+    #  model_path = '/home/pi/Documents/smart-car/autonomous/lane_navigation_check_loss_12.h5'
+    model_path = '/home/pi/Documents/smart-car/autonomous/new_lane_check.h5'
     model = load_model(model_path)
 
-    i = 0
-    carState = 'stop'
+    car_state = 'go'
+    GPIO.output(relay_pin1, 1)
+    GPIO.output(relay_pin2, 1)
 
     while ( camera.isOpened() ):
 
@@ -95,27 +104,19 @@ def main():
         default_angle = 90
         diff_angle = default_angle - steering_angle
 
-        motor_go(speedSet)
+        if car_state == 'stop':
+            GPIO.output(relay_pin1, 0)
+            GPIO.output(relay_pin2, 0)
+        else:
+            if abs(diff_angle) >= 25:
+                speedSet = 35
+                motor_go(speedSet)
+            else:
+                speedSet = 40
+                motor_go(speedSet)
 
-        # 직진
-        if 85 <= steering_angle < 95:
-            servo_control(5.6)
-        # 좌회전
-        elif 60 <= steering_angle < 85:
-            diff_angle = default_angle - 80
-        elif 30 <= steering_angle < 60:
-            diff_angle = default_angle - 70
-        elif steering_angle < 30:
-            diff_angle = default_angle - 60
-        # 우회전
-        elif 95 <= steering_angle < 120:
-            diff_angle = default_angle - 100
-        elif 120 <= steering_angle < 150:
-            diff_angle = default_angle - 110
-        elif 150 <= steering_angle:
-            diff_angle = default_angle - 120
-
-        servo_control(5.6 + (0.067 * diff_angle))
+            servo_control(5.6 + (0.045 * diff_angle))
+            time.sleep(0.1)
 
     cv2.destroyAllWindows()
 

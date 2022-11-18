@@ -1,6 +1,6 @@
 # 차를 조종하고 사진 저장하기
 
-import cv2 
+import cv2
 import RPi.GPIO as GPIO
 import time
 
@@ -56,18 +56,18 @@ time.sleep(0.5)
 dc_motor = GPIO.PWM(PWM_pin,50)
 dc_motor.start(0)
 
-speedSet = 25
+speedSet = 40
 
 def main():
     camera = cv2.VideoCapture(-1)
-    camera.set(3, 640)
-    camera.set(4, 480)
+    camera.set(3, 320)
+    camera.set(4, 240)
 
     filepath = '/home/pi/Documents/smart-car/data_acquisition/tmp/'
     carState = 'stop'
 
     fourcc = cv2.VideoWriter_fourcc(*'XVID')
-    out = cv2.VideoWriter(filepath+'test3.avi',fourcc, 20.0, (640,480))
+    out = cv2.VideoWriter(filepath+'n_lane.avi',fourcc, 20.0, (320,240))
 
     while ( camera.isOpened() ):
 
